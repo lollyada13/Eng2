@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI API</title>
+  <style>
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      background-image: url('https://www.creativefabrica.com/wp-content/uploads/2020/05/19/Abstract-Website-Background-with-Squares-Graphics-4157965-1-1-580x387.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      padding: 20px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+    }
+    label, input, button {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 5px 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .output-box {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 5px;
+    }
+    .goback {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 5px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AI API</h1>
+    <label for="inputText">Enter your text:</label>
+    <input type="text" id="inputText" placeholder="Type your text here">
+    <button onclick="processText()">Process Text</button>
+    <div id="output" class="output-box"></div> <!-- Output will be displayed in the box -->
+    <button id="readAloudButton" onclick="readAloud()">Read Aloud</button> <!-- Button to read the processed text aloud -->
+  </div>
+
+  <button id="homeButton" class="goback" onclick="goBack()">Go back to home</button>
+
+  <script>
+    function processText() {
+      var inputText = document.getElementById('inputText').value;
+
+      // Replace 'your-api-endpoint' with your actual API endpoint URL
+      fetch('https://api.nettoolkit.com/v1/account/test-api-keys', {
+        method: 'POST',
+        body: JSON.stringify({ input: inputText }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        var outputDiv = document.getElementById('output');
+        outputDiv.innerHTML = `<p><strong>Processed Text:</strong> ${data.output}</p>`;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        var outputDiv = document.getElementById('output');
+        outputDiv.innerHTML = `<p>Error processing text. Please try again later.</p>`;
+      });
+    }
+
+    function readAloud() {
+      var processedText = document.getElementById('output').innerText;
+      var utterance = new SpeechSynthesisUtterance(processedText);
+      speechSynthesis.speak(utterance);
+    }
+
+    function goBack() {
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
